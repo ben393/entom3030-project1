@@ -3,16 +3,12 @@ title: "Agriculture Emissions Data Wrangling"
 author: "Ben DeMoras"
 date: "2/8/2022"
 output: 
-  html_notebook:
-    theme: cerulean
-    highlight: pygments
+  github_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-See [Google Slides: Project 1 Ideas](https://docs.google.com/presentation/d/1RSorXVIWgWzrBEC967PpNk35eyjyPqM5IAFSQZZ0zag/edit#slide=id.gd1d3249e75_11_0) for research questions, hypotheses, and predictions.
 
 ## Data Needed:
 
@@ -43,8 +39,8 @@ I am Using Tidyverse packages to more easily import data to R and filter down wh
   library(dplyr)
 
 # 1. Import Data
-manure.csv <- read.csv(file="Emissions_Manure.csv", header = TRUE)
-synth.csv  <- read.csv(file="Emissions_Synthetic.csv", header = TRUE)
+manure.csv <- read.csv(file="csv-data/Emissions_Manure.csv", header = TRUE)
+synth.csv  <- read.csv(file="csv-data/Emissions_Synthetic.csv", header = TRUE)
 ```
 
 
