@@ -11,7 +11,7 @@ Ben DeMoras
         and N2O emissions. *Manure applied on soils* is what farmers are
         actively applying as fertilizer, whereas *left on soils* is the
         manure deposited by grazing livestock. I only include *applied
-        to soils* because you don’t have synthetic-pooping livestock.
+        to soils* because you don't have synthetic-pooping livestock.
 
     -   Filter down to N2O emissions from synthetic and total manure.
 
@@ -54,7 +54,7 @@ We want to consider these as one source. **We need to be sure we are
 combining the right categories!**
 
 ``` r
-# 2. Define some variables we'll need later on.
+# 2. Define some variables we\'ll need later on.
 manure.use.filter = c(
     "Manure applied to soils (N content)",
     "Manure applied to soils that leaches (N content)",
@@ -112,7 +112,7 @@ synth.emit <- synth.csv %>%
 
 ## Combine the data
 
-Now, we’re ready to combine the data into one dataframe for analysis!
+Now, we're ready to combine the data into one dataframe for analysis!
 
 ``` r
 data.master <- manure.use %>% 

@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 + N2O emissions (Response variable)
 
-  + Broken down into synthetic fertilizers, manure applied on soils, and N2O emissions. _Manure applied on soils_ is what farmers are actively applying as fertilizer, whereas _left on soils_ is the manure deposited by grazing livestock. I only include _applied to soils_ because you don't have synthetic-pooping livestock.
+  + Broken down into synthetic fertilizers, manure applied on soils, and N2O emissions. _Manure applied on soils_ is what farmers are actively applying as fertilizer, whereas _left on soils_ is the manure deposited by grazing livestock. I only include _applied to soils_ because you don\'t have synthetic-pooping livestock.
   
   + Filter down to N2O emissions from synthetic and total manure.
   
@@ -48,7 +48,7 @@ synth.csv  <- read.csv(file="csv-data/Emissions_Synthetic.csv", header = TRUE)
 NOTE: FAO breaks down fertilizers according to how the emissions end up. We want to consider these as one source.
 **We need to be sure we are combining the right categories!**
 ```{r echo = TRUE, results = 'hide'}
-# 2. Define some variables we'll need later on.
+# 2. Define some variables we\'ll need later on.
 manure.use.filter = c(
     "Manure applied to soils (N content)",
     "Manure applied to soils that leaches (N content)",
@@ -107,7 +107,7 @@ synth.emit <- synth.csv %>%
 
 
 ## Combine the data
-Now, we're ready to combine the data into one dataframe for analysis!
+Now, we\'re ready to combine the data into one dataframe for analysis!
 ```{r}
 data.master <- manure.use %>% 
     inner_join(manure.emit, by = "Area") %>% 
