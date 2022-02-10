@@ -1,0 +1,124 @@
+---
+title: "Agriculture Emissions Data Wrangling"
+author: "Ben DeMoras"
+date: "2/8/2022"
+output: 
+  html_notebook:
+    theme: cerulean
+    highlight: pygments
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+See [Google Slides: Project 1 Ideas](https://docs.google.com/presentation/d/1RSorXVIWgWzrBEC967PpNk35eyjyPqM5IAFSQZZ0zag/edit#slide=id.gd1d3249e75_11_0) for research questions, hypotheses, and predictions.
+
+## Data Needed:
+
++ N2O emissions (Response variable)
+
+  + Broken down into synthetic fertilizers, manure applied on soils, and N2O emissions. _Manure applied on soils_ is what farmers are actively applying as fertilizer, whereas _left on soils_ is the manure deposited by grazing livestock. I only include _applied to soils_ because you don't have synthetic-pooping livestock.
+  
+  + Filter down to N2O emissions from synthetic and total manure.
+  
+  + Source: See below.
+
++ Manure and Synthetic Fertilizer use: (Treatment)
+
+  + Filter down to tons of synthetic fertilizer and tons manure applied 
+  
+    + Synthetic: https://www.fao.org/faostat/en/#data/GY
+    
+    + Manure (applied to soil):  https://www.fao.org/faostat/en/#data/GU
+    
+  + Filter agricultural cropland area data https://www.fao.org/faostat/en/#data/RL
+  
+  + Calculate manure/fertilizer use per acre
+  
+## Import Data
+I am Using Tidyverse packages to more easily import data to R and filter down what we need. Cheatsheet: https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf
+```{r message=FALSE, warning=FALSE}
+# install.packages('dplyr')
+  library(dplyr)
+
+# 1. Import Data
+manure.csv <- read.csv(file="Emissions_Manure.csv", header = TRUE)
+synth.csv  <- read.csv(file="Emissions_Synthetic.csv", header = TRUE)
+```
+
+
+## Tidy Data
+NOTE: FAO breaks down fertilizers according to how the emissions end up. We want to consider these as one source.
+**We need to be sure we are combining the right categories!**
+```{r echo = TRUE, results = 'hide'}
+# 2. Define some variables we'll need later on.
+manure.use.filter = c(
+    "Manure applied to soils (N content)",
+    "Manure applied to soils that leaches (N content)",
+    "Manure applied to soils that volatilises (N content)")
+
+manure.emit.filter = c(
+    "Direct emissions (N2O) (Manure applied)",
+    "Indirect emissions (N2O that leaches) (Manure applied)",
+    "Indirect emissions (N2O that volatilises) (Manure applied)",
+    "Indirect emissions (N2O) (Manure applied)")
+
+synth.use.filter = c(
+    "Agricultural Use in nutrients",
+    "Nitrogen fertilizer content applied that leaches",
+    "Nitrogen fertilizer content applied that volatilises")
+
+synth.emit.filter = c(
+    "Direct emissions (N2O) (Synthetic fertilizers)",
+    "Indirect emissions (N2O that leaches) (Synthetic fertilizers)",
+    "Indirect emissions (N2O that volatilises) (Synthetic fertilizers)",
+    "Indirect emissions (N2O) (Synthetic fertilizers)")
+
+# 3. Get only the data we need
+manure.use <- manure.csv %>% 
+    filter(Element %in% manure.use.filter) %>%
+    select(Area, Y2019) %>% 
+    # Manure data are broken down by animal so now we need to combine them by country
+    group_by(Area) %>% 
+    summarize(Kg.ManureN.2019 = sum(Y2019, na.rm = TRUE))
+
+manure.emit <- manure.csv %>% 
+    filter(Element %in% manure.emit.filter) %>% 
+    select(Area, Y2019) %>%
+    group_by(Area) %>% 
+    summarize(KT.ManureN2O.2019 = sum(Y2019, na.rm = TRUE))
+
+synth.use <- synth.csv %>%
+    filter(Element %in% synth.use.filter) %>% 
+    select(Area, Y2019) %>% 
+    group_by(Area) %>% 
+    summarize(Kg.SynthNutrient.2019 = sum(Y2019, na.rm = TRUE))
+
+synth.emit <- synth.csv %>% 
+    filter(Element %in% synth.emit.filter) %>% 
+    select(Area, Y2019) %>% 
+    group_by(Area) %>% 
+    summarize(KT.SynthN20.2019 = sum(Y2019, na.rm = TRUE))
+
+# 4. Display subset of results in console to confirm success
+# head(manure.use)
+# head(manure.emit)
+# head(synth.use)
+# head(synth.emit)
+
+```
+
+
+## Combine the data
+Now, we're ready to combine the data into one dataframe for analysis!
+```{r}
+data.master <- manure.use %>% 
+    inner_join(manure.emit, by = "Area") %>% 
+    inner_join(synth.use,   by = "Area") %>% 
+    inner_join(synth.emit,  by = "Area")
+
+head(data.master, n = 10L)
+```
+
+We still need to exclude some categories (ie, `Annex I countries`, `Africa`) and figure out if we'll analyze the whole dataset, or a random subset.

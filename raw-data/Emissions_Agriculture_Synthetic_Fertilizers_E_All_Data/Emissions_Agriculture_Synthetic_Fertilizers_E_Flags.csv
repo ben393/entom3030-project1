@@ -1,0 +1,13 @@
+Flag,Description
+*,Unofficial figure
+<blank>,Official data
+A,Aggregate; may include official; semi-official; estimated or calculated data
+E,Expert sources from FAO (including other divisions)
+Fb,Data obtained as a balance
+Fc,Calculated data
+Fm,Manual Estimation
+P,Provisional official data
+Qm,Official data from questionnaires and/or national sources and/or COMTRADE (reporters)
+W,Data reported on country official publications or web sites (Official) or trade country files
+X,International reliable sources
+Z,When the Fertilizer Utilization Account (FUA) does not balance due to utilization from stockpiles; apparent consumption has been set to zero
